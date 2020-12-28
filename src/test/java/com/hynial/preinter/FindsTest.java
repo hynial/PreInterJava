@@ -13,6 +13,7 @@ public class FindsTest {
     @Test
     public void testFindMaxRight(){
         int[] testRights = intArr.clone();
+        ApplicationUtil.printArray(testRights);
         testRights = finds.findMaxRight(testRights);
         ApplicationUtil.printArray(testRights);
     }
