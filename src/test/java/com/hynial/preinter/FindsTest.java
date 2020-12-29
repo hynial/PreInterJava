@@ -36,4 +36,15 @@ public class FindsTest {
         List<List<Integer>> perms = finds.permute(perm);
         ApplicationUtil.printListOfList(perms);
     }
+
+    @Test
+    public void testCombination(){
+        int[] comb = intArr2.clone();
+        ApplicationUtil.printArray(comb);
+        int n = 2;
+        System.out.println("Combinations:" + finds.combinationCount(comb.length, n));
+        List<List<Integer>> combs = finds.combination(comb, n);
+        System.out.println("Actuals:" + combs.size());
+        ApplicationUtil.printListOfList(combs);
+    }
 }

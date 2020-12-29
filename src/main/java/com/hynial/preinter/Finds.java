@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class Finds {
     /**
@@ -103,5 +104,63 @@ public class Finds {
         }
 
         return result;
+    }
+
+    /**
+     * 组合数
+     * @param nums
+     * @param n
+     * @return
+     */
+    public List<List<Integer>> combination(int[] nums, int n){
+        List<List<Integer>> result = new ArrayList<>();
+
+        List<Integer> src = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        List<Integer> tmp = new ArrayList<>(src.size());
+
+        combine(src, 0, 0, n, tmp, result);
+
+        return result;
+    }
+
+    /**
+     * 递归找组合数
+     * @param src
+     * @param srcIndex
+     * @param i tmp列表的下标
+     * @param n
+     * @param tmp 关键数据结构，用于存在每次生成的组合数
+     * @param result
+     */
+    private void combine(List<Integer> src, int srcIndex, int i, int n, List<Integer> tmp, List<List<Integer>> result) {
+        int j;
+        for (j = srcIndex; j < src.size() - (n - 1); j++ ) {
+            tmp.add(i, src.get(j));
+            if (n == 1) {
+                result.add(new ArrayList<Integer>(tmp.subList(0, i + 1)));
+            } else {
+                n--;
+                i++;
+                combine(src, j+1, i, n, tmp, result);
+                n++;
+                i--;
+            }
+        }
+    }
+
+    public int combinationCount(int m, int n) {
+        if (m < n)
+            return 0; // 如果总数小于取出的数，直接返回0
+        int k = 1;
+        int j = 1;
+        // 该种算法约掉了分母的(m-n)!,这样分子相乘的个数就是有n个了 ： m!/[n!(m-n)!], 如下k=m!/(m-n)!, 刚好有n次乘法
+        for (int i = n; i >= 1; i--) {
+            k = k * m;
+            j = j * n;
+            m--;
+            n--;
+        }
+
+        return k / j;
     }
 }
