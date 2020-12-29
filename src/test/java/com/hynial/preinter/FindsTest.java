@@ -21,6 +21,14 @@ public class FindsTest {
     }
 
     @Test
+    public void testFindMaxRightInCircle(){
+        int[] testRights = intArr.clone();
+        ApplicationUtil.printArray(testRights);
+        testRights = finds.findMaxRightCircle(testRights);
+        ApplicationUtil.printArray(testRights);
+    }
+
+    @Test
     public void testNextPermutation(){
         int[] testNext = intArr2.clone();
         ApplicationUtil.printArray(testNext);

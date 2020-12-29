@@ -9,49 +9,68 @@ import java.util.stream.Collectors;
 public class Finds {
     /**
      * 找出数组中每个数右边第一个比它大的元素--时间复杂度o(n)单调栈解法
+     *
      * @param arr
      * @return
      */
-    public int[] findMaxRight(int[] arr){
+    public int[] findMaxRight(int[] arr) {
         int[] maxRights = new int[arr.length];
 
         Stack<Integer> indexStack = new Stack<>();
         int i = 0;
         indexStack.push(i);
-        while(i < arr.length){
-            if(!indexStack.empty() && arr[i] > arr[indexStack.peek()]){
+        while (i < arr.length) {
+            if (!indexStack.empty() && arr[i] > arr[indexStack.peek()]) {
                 maxRights[indexStack.peek()] = arr[i];
                 indexStack.pop();
-            }else{
+            } else {
                 indexStack.push(i++);
             }
         }
 
-        while(!indexStack.empty()){
+        while (!indexStack.empty()) {
             maxRights[indexStack.pop()] = -1;
         }
 
         return maxRights;
     }
 
+    public int[] findMaxRightCircle(int[] nums) {
+        int n = nums.length;
+        Stack<Integer> st = new Stack<>();
+        int[] res = new int[nums.length];
+
+        for (int i = 2 * n - 2; i >= 0; --i) {
+            while (!st.empty() && nums[i % n] >= st.peek()) {
+                st.pop();
+            }
+
+            res[i % n] = st.empty() ? -1 : st.peek();
+            st.push(nums[i % n]);
+        }
+
+        return res;
+    }
+
     /**
      * Next Permutation , 下一个排列
+     *
      * @param nums
      */
-    public void nextPermutation(int[] nums){
+    public void nextPermutation(int[] nums) {
         int len = nums.length;
         int i = len - 1;
-        while(i > 0){
-            if(nums[i] > nums[i - 1]){
+        while (i > 0) {
+            if (nums[i] > nums[i - 1]) {
                 break;
             }
             i--;
         }
 
-        if(i > 0){
+        if (i > 0) {
             int closest = len - 1;
-            while(closest >= i){
-                if (nums[closest] > nums[i - 1]){
+            while (closest >= i) {
+                if (nums[closest] > nums[i - 1]) {
                     break;
                 }
                 closest--;
@@ -63,7 +82,7 @@ public class Finds {
         }
 
         int j = i, k = len - 1;
-        while( j < k){
+        while (j < k) {
             int tmp = nums[j];
             nums[j] = nums[k];
             nums[k] = tmp;
@@ -74,6 +93,7 @@ public class Finds {
 
     /**
      * 全排列
+     *
      * @param num
      * @return
      */
@@ -88,7 +108,7 @@ public class Finds {
 
             for (List<Integer> l : result) {
                 // # of locations to insert is largest index + 1
-                for (int j = 0; j < l.size()+1; j++) {
+                for (int j = 0; j < l.size() + 1; j++) {
                     // + add num[i] to different locations
                     l.add(j, num[i]);
 
@@ -108,11 +128,12 @@ public class Finds {
 
     /**
      * 组合数
+     *
      * @param nums
      * @param n
      * @return
      */
-    public List<List<Integer>> combination(int[] nums, int n){
+    public List<List<Integer>> combination(int[] nums, int n) {
         List<List<Integer>> result = new ArrayList<>();
 
         List<Integer> src = Arrays.stream(nums).boxed().collect(Collectors.toList());
@@ -125,23 +146,24 @@ public class Finds {
 
     /**
      * 递归找组合数
+     *
      * @param src
      * @param srcIndex
-     * @param i tmp列表的下标
+     * @param i        tmp列表的下标
      * @param n
-     * @param tmp 关键数据结构，用于存在每次生成的组合数
+     * @param tmp      关键数据结构，用于存在每次生成的组合数
      * @param result
      */
     private void combine(List<Integer> src, int srcIndex, int i, int n, List<Integer> tmp, List<List<Integer>> result) {
         int j;
-        for (j = srcIndex; j < src.size() - (n - 1); j++ ) {
+        for (j = srcIndex; j < src.size() - (n - 1); j++) {
             tmp.add(i, src.get(j));
             if (n == 1) {
                 result.add(new ArrayList<Integer>(tmp.subList(0, i + 1)));
             } else {
                 n--;
                 i++;
-                combine(src, j+1, i, n, tmp, result);
+                combine(src, j + 1, i, n, tmp, result);
                 n++;
                 i--;
             }
