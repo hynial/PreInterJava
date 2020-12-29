@@ -63,4 +63,91 @@ public class Sorts {
             }
         }
     }
+
+    /**
+     * 改进的简单选择排序
+     * @param arr
+     * @param len
+     */
+    public void chooseSortUpgrade(int[] arr, int len){
+        int half = len / 2;
+        for(int i = 0; i < half; i++){
+            int arrIndex = i,tmp;
+            int arrIndex1 = len - 1 - i,tmp1;
+            //        Method 1
+            //        for(int j = i+1;j < len - i + 1; j++){
+            //            if(arr[arrIndex] > arr[j]){
+            //                arrIndex = j;
+            //            }
+            //        }
+            //        if(i != arrIndex){
+            //            tmp = arr[i];
+            //            arr[i] = arr[arrIndex];
+            //            arr[arrIndex] = tmp;
+            //        }
+            //        for(int j = i;j < len - i - 1; j++){
+            //            if(arr[arrIndex1] < arr[j]){
+            //                arrIndex1 = j;
+            //            }
+            //        }
+            //        if(i != len - 1 - i && len - 1 - i != arrIndex1){
+            //            tmp1 = arr[len - 1 - i];
+            //            arr[len - 1 - i] = arr[arrIndex1];
+            //            arr[arrIndex1] = tmp1;
+            //        }
+            //        Method 2
+            for(int j = i;j < len - i; j++){
+                if(arr[arrIndex] > arr[j]){
+                    arrIndex = j;
+                }
+                if(arr[arrIndex1] < arr[j]){
+                    arrIndex1 = j;
+                }
+            }
+            if(i != arrIndex){
+                tmp = arr[i];
+                arr[i] = arr[arrIndex];
+                arr[arrIndex] = tmp;
+            }
+            if(arrIndex1 == i){
+                arrIndex1 = arrIndex;
+            }
+            if(i != len - 1 - i && len - 1 - i != arrIndex1){
+                tmp1 = arr[len - 1 - i];
+                arr[len - 1 - i] = arr[arrIndex1];
+                arr[arrIndex1] = tmp1;
+            }
+        }
+    }
+
+    /**
+     * 冒泡排序
+     * @param arr
+     * @param len
+     */
+    public void bubbleSort(int arr[],int len){
+        //    Method 1
+        //    int tmp;
+        //    for(int i = 0; i < len - 1; i++){
+        //        for(int j = 0; j < len - 1 - i; j++){
+        //            if(arr[j] > arr[j+1]){
+        //                tmp = arr[j];
+        //                arr[j] = arr[j+1];
+        //                arr[j+1] = tmp;
+        //            }
+        //        }
+        //    }
+        //    Method 2
+        int tmp;
+        for (int i =0 ;i < len - 1 ;i++)
+            for (int j=i+1;j < len;j++)
+            {
+                if(arr[i]>arr[j])
+                {
+                    tmp =arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tmp ;
+                }
+            }
+    }
 }
