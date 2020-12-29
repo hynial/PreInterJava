@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 
 public class SortsTest {
     Sorts sorts = new Sorts();
-    private int intArr[] = IntStream.of(8, 2, 5, 4, 3, 9, 7, 2, 5).toArray();
+    private int[] intArr = IntStream.of(8, 2, 5, 4, 3, 9, 7, 2, 5).toArray();
 
     @Test
     public void testChooseSortUpgrade(){
@@ -23,5 +23,13 @@ public class SortsTest {
         ApplicationUtil.printArray(testBubble);
         sorts.bubbleSort(testBubble, testBubble.length);
         ApplicationUtil.printArray(testBubble);
+    }
+
+    @Test
+    public void testMergeSort(){
+        int[] testMerge = intArr.clone();
+        ApplicationUtil.printArray(testMerge);
+        sorts.mergeSort(testMerge);
+        ApplicationUtil.printArray(testMerge);
     }
 }

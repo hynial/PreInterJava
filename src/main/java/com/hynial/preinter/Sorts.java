@@ -150,4 +150,51 @@ public class Sorts {
                 }
             }
     }
+
+    /**
+     * 归并排序
+     * @param nums
+     */
+    public void mergeSort(int[] nums){
+        int len = nums.length;
+        int i = 0, j = len - 1;
+
+        int[] temp = new int[len];
+        mSort(nums, i, j, temp);
+    }
+
+    private void mSort(int[] nums, int l, int r, int[] temp){
+        if(l < r){
+            int m = (l + r) / 2;
+            mSort(nums, l, m, temp);
+            mSort(nums, m + 1, r, temp);
+            merge(nums, l, m, r, temp);
+        }
+    }
+
+    private void merge(int[] nums, int l, int m, int r, int[] temp){
+        int t = 0;
+        int i = l;
+        int j = m + 1;
+        while(i <= m && j <= r){
+            if(nums[i] >= nums[j]){
+                temp[t++] = nums[j++];
+            }else{
+                temp[t++] = nums[i++];
+            }
+        }
+
+        while(i <= m){
+            temp[t++] = nums[i++];
+        }
+
+        while(j <= r){
+            temp[t++] = nums[j++];
+        }
+
+        t = 0;
+        while(l <= r){
+            nums[l++] = temp[t++];
+        }
+    }
 }
