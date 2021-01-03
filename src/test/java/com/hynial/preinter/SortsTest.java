@@ -3,6 +3,7 @@ package com.hynial.preinter;
 import com.hynial.preinter.util.ApplicationUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class SortsTest {
@@ -31,5 +32,13 @@ public class SortsTest {
         ApplicationUtil.printArray(testMerge);
         sorts.mergeSort(testMerge);
         ApplicationUtil.printArray(testMerge);
+    }
+
+    @Test
+    public void testHeapSort(){
+        int[] testHeap = intArr.clone();
+        ApplicationUtil.printArray(testHeap);
+        Sorts.HeapSort.sort(testHeap);
+        System.out.println(Arrays.toString(testHeap));
     }
 }
