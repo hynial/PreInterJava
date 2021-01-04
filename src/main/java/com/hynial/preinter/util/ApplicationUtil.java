@@ -8,6 +8,7 @@ public class ApplicationUtil {
     public static void printArray(int[] intArr) {
         System.out.println(Arrays.stream(intArr).boxed().map(Object::toString).collect(Collectors.joining(", ")));
         System.out.println();
+        // Arrays.toString(intArr); // find takes with braces.
     }
 
     public static void printListOfList(List<List<Integer>> lists){
