@@ -1,9 +1,9 @@
 package com.hynial.preinter.dmodel.dynproxy;
 
-import com.hynial.preinter.dmodel.dynproxy.impl.IUserDao;
-import com.hynial.preinter.dmodel.dynproxy.inst.ProxyByCglibFactory;
-import com.hynial.preinter.dmodel.dynproxy.inst.ProxyByInterfaceFactory;
-import com.hynial.preinter.dmodel.dynproxy.inst.UserDao;
+import com.hynial.preinter.dmodel.dynproxy.ifc.IUserDao;
+import com.hynial.preinter.dmodel.dynproxy.impl.ProxyByCglibFactory;
+import com.hynial.preinter.dmodel.dynproxy.impl.ProxyByInterfaceFactory;
+import com.hynial.preinter.dmodel.dynproxy.impl.UserDao;
 
 /**
  * 动态代理则在运行时借助于 JDK 动态代理、CGLIB 等在内存中”临时”生成 AOP 动态代理类，因此也被称为运行时增强。

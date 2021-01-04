@@ -1,4 +1,4 @@
-package com.hynial.preinter.dmodel.dynproxy.inst;
+package com.hynial.preinter.dmodel.dynproxy.impl;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

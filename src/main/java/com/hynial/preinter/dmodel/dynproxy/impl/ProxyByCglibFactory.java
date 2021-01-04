@@ -1,4 +1,4 @@
-package com.hynial.preinter.dmodel.dynproxy.inst;
+package com.hynial.preinter.dmodel.dynproxy.impl;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;

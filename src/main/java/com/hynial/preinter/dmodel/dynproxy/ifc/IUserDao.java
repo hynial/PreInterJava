@@ -1,4 +1,4 @@
-package com.hynial.preinter.dmodel.dynproxy.impl;
+package com.hynial.preinter.dmodel.dynproxy.ifc;
 
 public interface IUserDao {
 
