@@ -1,4 +1,4 @@
-package com.hynial.preinter.observer.entity;
+package com.hynial.preinter.dmodel.observer.entity;
 
 public class Product {
     private String name;

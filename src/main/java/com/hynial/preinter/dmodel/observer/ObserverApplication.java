@@ -1,8 +1,8 @@
-package com.hynial.preinter.observer;
+package com.hynial.preinter.dmodel.observer;
 
-import com.hynial.preinter.observer.impl.Admin;
-import com.hynial.preinter.observer.impl.Customer;
-import com.hynial.preinter.observer.impl.Store;
+import com.hynial.preinter.dmodel.observer.impl.Admin;
+import com.hynial.preinter.dmodel.observer.impl.Customer;
+import com.hynial.preinter.dmodel.observer.impl.Store;
 
 public class ObserverApplication {
     public static void main(String[] args) {

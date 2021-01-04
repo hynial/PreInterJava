@@ -1,6 +1,6 @@
-package com.hynial.preinter.observer.ifc;
+package com.hynial.preinter.dmodel.observer.ifc;
 
-import com.hynial.preinter.observer.entity.Product;
+import com.hynial.preinter.dmodel.observer.entity.Product;
 
 public interface ProductObserver {
 

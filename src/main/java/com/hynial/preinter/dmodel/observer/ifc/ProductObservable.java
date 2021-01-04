@@ -1,4 +1,4 @@
-package com.hynial.preinter.observer.ifc;
+package com.hynial.preinter.dmodel.observer.ifc;
 
 public interface ProductObservable {
     void addObserver(ProductObserver observer);

@@ -1,8 +1,8 @@
-package com.hynial.preinter.observer.impl;
+package com.hynial.preinter.dmodel.observer.impl;
 
-import com.hynial.preinter.observer.entity.Product;
-import com.hynial.preinter.observer.ifc.ProductObservable;
-import com.hynial.preinter.observer.ifc.ProductObserver;
+import com.hynial.preinter.dmodel.observer.entity.Product;
+import com.hynial.preinter.dmodel.observer.ifc.ProductObservable;
+import com.hynial.preinter.dmodel.observer.ifc.ProductObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
