@@ -21,7 +21,9 @@ public class DecoratorApplication {
         // Decorator 2
         System.out.println("Add fish bird skill");
         TheGreatestSage birder = new Birder(new Fisher(beforeWrapper));
-        birder.move();
+        birder.move(); // 对客户端全透明
+
+        // 对客户端半透明
         ((Birder) birder).fly();
     }
 }
