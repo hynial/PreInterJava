@@ -1,12 +1,24 @@
 package com.hynial.preinter.dmodel.prototype;
 
 import java.io.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Money implements Cloneable, Serializable {
 
     private int faceValue;
 
     private Area area;
+
+    public List<Area> getAreaList() {
+        return areaList;
+    }
+
+    public void setAreaList(List<Area> areaList) {
+        this.areaList = areaList;
+    }
+
+    private List<Area> areaList;
 
     public int getFaceValue() {
         return faceValue;
@@ -35,6 +47,14 @@ public class Money implements Cloneable, Serializable {
         // Method 1
 //        cloneMoney = (Money) super.clone(); // 浅拷贝无法拷贝Area
 //        cloneMoney.area = this.area.clone();  // 增加Area的拷贝 - 深拷贝
+//        cloneMoney.areaList = this.areaList != null ? this.areaList.stream().map(area1 -> {
+//            try {
+//                return area1.clone();
+//            } catch (CloneNotSupportedException e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }).collect(Collectors.toList()) : null;
 
         // Method 22
         // 调用deepClone，而不是Object的clone方法

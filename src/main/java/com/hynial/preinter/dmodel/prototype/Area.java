@@ -3,6 +3,12 @@ package com.hynial.preinter.dmodel.prototype;
 import java.io.Serializable;
 
 public class Area implements Cloneable, Serializable {
+    public Area(String unit) {
+        this.unit = unit;
+    }
+
+    public Area() {
+    }
 
     // 钞票单位
     private String unit;
