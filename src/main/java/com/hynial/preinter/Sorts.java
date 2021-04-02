@@ -156,6 +156,7 @@ public class Sorts {
     /**
      * 归并排序
      * https://www.cnblogs.com/chengxiao/p/6194356.html
+     *
      * @param nums
      */
     public void mergeSort(int[] nums) {
@@ -255,6 +256,33 @@ public class Sorts {
             int temp = arr[a];
             arr[a] = arr[b];
             arr[b] = temp;
+        }
+    }
+
+    /**
+     * 希尔排序
+     * 希尔排序(Shell's Sort)是插入排序的一种又称“缩小增量排序”（Diminishing Increment Sort），是直接插入排序算法的一种更高效的改进版本。希尔排序是非稳定排序算法。该方法因D.L.Shell于1959年提出而得名。
+     * https://www.cnblogs.com/chengxiao/p/6104371.html
+     * 其最坏时间复杂度依然为O(n2)，一些经过优化的增量序列如Hibbard经过复杂证明可使得最坏时间复杂度为O(n3/2)
+     * @param arr
+     */
+    public void shellSort(int[] arr) {
+        int d = arr.length;
+        while (true) {
+            d = d / 2;
+            for (int x = 0; x < d; x++) {
+                for (int i = x + d; i < arr.length; i = i + d) {
+                    int temp = arr[i];
+                    int j;
+                    for (j = i - d; j >= 0 && arr[j] > temp; j = j - d) {
+                        arr[j + d] = arr[j];
+                    }
+                    arr[j + d] = temp;
+                }
+            }
+            if (d == 1) {
+                break;
+            }
         }
     }
 }
