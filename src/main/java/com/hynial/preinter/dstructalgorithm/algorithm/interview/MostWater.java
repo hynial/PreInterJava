@@ -5,26 +5,49 @@ import java.util.OptionalInt;
 
 /**
  * 网宿科技 - java 开发面试题
+ * 牛客题 - 容器盛最多水问题
+ * 对比LeetCode 11 题
  * 一个由正整数组成的数组中，每个数组元素表示从地上依次叠起的砖头数量，假设砖头之间都不漏水并且考虑重力的情况下，可以在砖头上盛满多少水，一块砖头相当于一格水。
  */
 public class MostWater {
     public static void main(String[] args) {
-        int[] bricks = new int[]{3, 1, 4, 7, 5,1, 8, 5, 2, 4, 10};
+        int[] bricks = new int[]{1,8,6,2,5,4,8,3,7};
+        int runTimes = 1;
         OptionalInt maxOpt = Arrays.stream(bricks).max();
         int max = maxOpt.getAsInt();
         System.out.println("Max:" + max);
         long start1 = System.nanoTime();
         int water = waterCalculate(bricks, max);
+        for(int t = 1; t < runTimes; t++){
+            waterCalculate(bricks, max);
+        }
         long delta1 = System.nanoTime() - start1;
-        System.out.println("Ans1:" + water + ", consume:" + delta1/1000000.0);
+        System.out.println("Ans1:" + water + ", consume（ms ， 1ms = 1000000 ns）:" + delta1/1000000.0);
         long start2 = System.nanoTime();
         int water2 = waterCalculate2(bricks);
+        for(int t = 1; t < runTimes; t++){
+            waterCalculate2(bricks);
+        }
         long delta2 = System.nanoTime() - start2;
         System.out.println("Ans2:" + water2 + ", consume:" + delta2/1000000.0);
+
+        long start21 = System.nanoTime();
+        int water21 = waterCalculate2_1(bricks);
+        long delta21 = System.nanoTime() - start21;
+        System.out.println("Ans2_1:" + water21 + ", consume:" + delta21/1000000.0);
+
+
         long start3 = System.nanoTime();
         int water3 = waterCalculate3(bricks, max);
+        for(int t = 1; t < runTimes; t++){
+            waterCalculate3(bricks, max);
+        }
         long delta3 = System.nanoTime() - start3;
         System.out.println("Ans3:" + water3 + ", consume:" + delta3/1000000.0);
+
+        // leet-code 11
+        int maxArea = maxArea(bricks);
+        System.out.println("MaxArea:" + maxArea);
     }
 
     /**
@@ -45,10 +68,10 @@ public class MostWater {
             }
         }
 
-//        printDimension(flags);
-//        System.out.println("----------");
-//        printRotation90(flags, max);
-//        System.out.println("----------");
+        printDimension(flags);
+        System.out.println("----------");
+        printRotation90(flags, max);
+        System.out.println("----------");
 
         for(int i = 1; i < len; i++){
             for(int j = bricks[i]; j < max; j++) {
@@ -113,14 +136,14 @@ public class MostWater {
             deep = bricks[left] <= bricks[right] ? bricks[left] : bricks[right];
             if(bricks[left] <= bricks[right]){
                 for(int i = left + 1; i <= right; i++){
-                    if(bricks[i] > bricks[left]){
+                    if(bricks[i] >= bricks[left]){
                         left = i;
                         break;
                     }
                 }
             }else{
                 for(int j = right - 1; j >= left; j--){
-                    if(bricks[j] > bricks[right]){
+                    if(bricks[j] >= bricks[right]){
                         right = j;
                         break;
                     }
@@ -138,6 +161,27 @@ public class MostWater {
             int delta = miner - bricks[i];
             if(delta > 0){
                 ans += (delta - (deep > bricks[i] ? (deep - bricks[i]) : 0));
+            }
+        }
+
+        return ans;
+    }
+
+    private static int waterCalculate2_1(int[] bricks) {
+        int left = 0;
+        int right = bricks.length - 1;
+        int leftMax = bricks[left], rightMax = bricks[right];
+        int ans = 0;
+
+        while(left < right){
+            if(bricks[left] < bricks[right]){
+                left++;
+                leftMax = bricks[left] > leftMax ? bricks[left] : leftMax;
+                ans += leftMax - bricks[left];
+            }else{
+                right--;
+                rightMax = bricks[right] > rightMax ? bricks[right] : rightMax;
+                ans += rightMax - bricks[right];
             }
         }
 
@@ -192,5 +236,29 @@ public class MostWater {
         }
 
         return ans;
+    }
+
+    /**
+     * leetCode 11
+     * 求能盛满水的最大面积
+     * @param bricks
+     * @return
+     */
+    private static int maxArea(int[] bricks){
+        int left = 0;
+        int right = bricks.length - 1;
+        int maxArea = 0;
+        while(left < right){
+            int current = Math.min(bricks[left], bricks[right]) * (right - left);
+            maxArea = Math.max(maxArea, current);
+
+            if(bricks[left] < bricks[right]){
+                left++;
+            }else{
+                right--;
+            }
+        }
+
+        return maxArea;
     }
 }
