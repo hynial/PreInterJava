@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 贝尔曼-福特 算法
  * An implementation of the Bellman-Ford algorithm. The algorithm finds the shortest path between a
  * starting node and all other nodes in the graph. The algorithm also detects negative cycles.
  * @https://github.com/williamfiset/Algorithms/tree/master/src/main/java/com/williamfiset/algorithms/graphtheory
