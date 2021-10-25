@@ -15,6 +15,11 @@ import java.util.concurrent.TimeUnit;
  * JMH 性能测试框架 Java Microbenchmark Harness
  * https://www.xncoding.com/2018/01/07/java/jmh.html
  * https://dafengge0913.github.io/jmh/
+ * 使用 负载下的基准测试。
+ * Blackhole 来实际消耗 CPU 周期， 从而使你可以模拟不同 CPU.
+ * @CompilerControl 注解可用于要求编译器不要内联、明确内联或者从编译中排除该方法。
+ *
+ * HdrHistogram
  */
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.AverageTime)
@@ -79,5 +84,26 @@ public class BranchingShowcase {
 //                .build();
 //        Collection<RunResult> results =  new Runner(opt).run();
 //        ResultExporter.exportResult("单线程与多线程求和性能", results, "length", "微秒");
+
+//        Options opt = new OptionsBuilder().include(SortBenchmark.class.getSimpleName())
+//                .warmupIterations(100)
+//                .measurementIterations(5).forks(1)
+//                .jvmArgs("-server " , "-Xms2048m " , "-Xmx2048m " ).build();
+
+//        Options opt = new OptionsBuilder().include(SortBenchmark.class.getSimpleName())
+//                .warmupIterations(100)
+//                .measurementIterations(5).forks(1)
+//                .jvmArgs("-server " , "-Xms2048m " , "-Xmx2048m " )
+//                .addProfiler(GCProfiler.class)
+//                .addProfiler(StackProfiler.class).build();
+
+//        通过执行以下命令来设置一个新的 JMH 项目：
+//        $ mvn archetype:generate \
+//        -DinteractiveMode=false \
+//        -DarchetypeGroupId=org.openjdk.jmh \
+//        -DarchetypeArtifactId=jmh-java-benchmark-archetype \
+//        -DgroupId=org.sample \
+//        -DartifactId=test \
+//        -Dversion=1.0
     }
 }
