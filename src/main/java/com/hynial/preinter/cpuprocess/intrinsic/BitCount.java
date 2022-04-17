@@ -15,6 +15,7 @@ public class BitCount {
         for (int i = Integer.MIN_VALUE; i < Integer.MAX_VALUE; i++) {
             // In a second run, replace with Integer.bitCount
 //            sum += bitCount(i);
+//            HotSpotIntrinsicCandidate
             sum += Integer.bitCount(i);
         }
         System.out.println(sum);
