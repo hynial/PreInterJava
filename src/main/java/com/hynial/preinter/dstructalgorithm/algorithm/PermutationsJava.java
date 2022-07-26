@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Permutations {
+public class PermutationsJava {
     public List<String> permutations(char[] chars){
         List<String> ans = new ArrayList<>();
         if(chars.length == 1) {

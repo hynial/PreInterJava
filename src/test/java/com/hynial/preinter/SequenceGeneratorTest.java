@@ -45,7 +45,7 @@ public class SequenceGeneratorTest {
                             j--;
                         }
                     } catch (Throwable throwable){
-                        System.out.println(throwable.toString());
+                        System.out.println(throwable);
                     } finally {
 //                        System.out.println(f);
                         countDownLatch.countDown();
@@ -62,6 +62,8 @@ public class SequenceGeneratorTest {
         long delta = System.nanoTime() - s;
         System.out.println(delta/1000000.0);
         System.out.println("Size:" + concurrentHashMap.keySet().size());
+
+        concurrentHashMap.keySet().stream().sorted().limit(100).forEach(id -> System.out.println(id));
     }
 
     @Test
