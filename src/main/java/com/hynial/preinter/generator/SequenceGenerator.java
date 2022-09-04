@@ -3,6 +3,10 @@ package com.hynial.preinter.generator;
 import java.net.NetworkInterface;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Enumeration;
 
 /**
@@ -24,7 +28,7 @@ public class SequenceGenerator {
     private static final int maxSequence = (int)(Math.pow(2, SEQUENCE_BITS) - 1);
 
     // Custom Epoch (January 1, 2015 Midnight UTC = 2015-01-01T00:00:00Z)
-    private static final long CUSTOM_EPOCH = 1651418455727L;
+    private static final long CUSTOM_EPOCH = LocalDateTime.now().minusYears(10).toInstant(ZoneOffset.UTC).toEpochMilli();
 
     private final int nodeId;
 
