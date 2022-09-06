@@ -41,9 +41,9 @@ public class SequenceStringGenerator {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
     private static final long CUSTOM_EPOCH = LocalDateTime.now().minusYears(100).toInstant(ZoneOffset.UTC).toEpochMilli();
-    private static final long NODE_BITS = 4;
+    private static final long NODE_BITS = 10;
     private static final int MAX_NODE_ID = (int) (Math.pow(2, NODE_BITS) - 1);
-    private static final long SEQUENCE_BITS = 12; // make it big , P UP
+    private static final long SEQUENCE_BITS = 18; // make it big , P UP  ：夏商（26） 10/18 淘宝（28） 10/18
     private static final long MAX_SEQUENCE_ID = (long) (Math.pow(2, SEQUENCE_BITS) - 1);
 
     private volatile long sequence;
@@ -81,7 +81,7 @@ public class SequenceStringGenerator {
 
         String result = currentTimestamp + "-" + id;
         return result;
-//        return getTimestampString(result);
+//        return getTimestampString(result); // 慢了三倍
     }
 
 

@@ -39,10 +39,10 @@ public class SequenceGeneratorTest {
                         int j = 100000;
                         while (j > 0) {
                             long id = sequenceGenerator1.nextId();
-                            if (concurrentHashMap.containsKey(id)) {
+                            if (concurrentHashMap.putIfAbsent(id, new AtomicLong()) != null) {
                                 throw new IllegalStateException("repeat!");
                             }
-                            concurrentHashMap.put(id, Thread.currentThread().getName());
+//                            concurrentHashMap.put(id, Thread.currentThread().getName());
                             j--;
                         }
                     } catch (Throwable throwable) {
@@ -61,8 +61,7 @@ public class SequenceGeneratorTest {
         }
         executorService.shutdown();
         long delta = System.nanoTime() - s;
-        System.out.println(delta / 1000000.0);
-        System.out.println("Size:" + concurrentHashMap.keySet().size());
+        System.out.println(String.format("Size:%d, TotalConsumeMilliSeconds:%.4f", concurrentHashMap.keySet().size(), (delta / 1000000.0)));
 
         concurrentHashMap.keySet().stream().sorted().limit(100).forEach(id -> System.out.println(id));
     }
@@ -89,7 +88,7 @@ public class SequenceGeneratorTest {
     }
 
 
-    private ConcurrentHashMap<String, String> stringConcurrentHashMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, AtomicLong> stringConcurrentHashMap = new ConcurrentHashMap<>();
 
     @Test
     public void generateStringSequenceWithTime() {
@@ -111,7 +110,11 @@ public class SequenceGeneratorTest {
 //                            throw new RuntimeException("Repeat!" + one);
 //                        }
 
-                        stringConcurrentHashMap.put(one, Thread.currentThread().getName());
+//                        stringConcurrentHashMap.put(one, Thread.currentThread().getName());
+                        // faster than number situation
+                        if (stringConcurrentHashMap.putIfAbsent(one, new AtomicLong()) != null) {
+                            throw new RuntimeException("Repeat!" + one);
+                        }
                     }
                 } catch (RuntimeException e) {
                     System.out.println(e.getMessage());
@@ -134,7 +137,7 @@ public class SequenceGeneratorTest {
         stringConcurrentHashMap.keySet().stream().sorted().limit(100).forEach(System.out::println);
     }
 
-    private long oneSecond = 1000000000L * 10;
+    private long oneSecond = 1000000000L * 1;
 
     @Test
     public void oneSecondCount() {
@@ -149,14 +152,14 @@ public class SequenceGeneratorTest {
 //        }
         int count = 0;
         while (System.nanoTime() - s < oneSecond) {
-            sequenceGenerator.nextId();
+            sequenceGenerator.nextId();  // 10/12
             count++;
         }
 
         int count2 = 0;
         s = System.nanoTime();
         while (System.nanoTime() - s < oneSecond) {
-            sequenceStringGenerator.nextId();
+            sequenceStringGenerator.nextId(); // 10/18 的配置，速度是上面的两倍。。
             count2++;
         }
 
