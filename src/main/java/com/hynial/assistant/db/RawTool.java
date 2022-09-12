@@ -70,6 +70,28 @@ public class RawTool {
         return constraintMap;
     }
 
+    public static Map<String, List<String>> getAutoFieldMap(Connection conn, String schema, String table) throws SQLException {
+        Statement s = conn.createStatement();
+        s.executeQuery("select column_name from INFORMATION_SCHEMA.COLUMNS "
+                + " where table_schema = '" + schema + "'"
+                + " and table_name ='" + table + "'"
+                + " and EXTRA like '%auto_increment%'"
+        );
+        ResultSet rs = s.getResultSet();
+
+        Map<String, List<String>> result = new HashMap<>();
+        while (rs.next()) {
+            String autoField = rs.getString("column_name");
+            if (result.containsKey(table)){
+                result.get(table).add(autoField);
+            } else {
+                result.put(table, Stream.of(autoField).collect(Collectors.toList()));
+            }
+        }
+
+        return result;
+    }
+
     public static List<String> getDbList(Connection conn) throws SQLException {
         List<String> dbList = new ArrayList<>();
         Statement stmt = conn.createStatement();
@@ -430,6 +452,7 @@ public class RawTool {
         return totalSql;
     }
 
+//    SHOW TABLE STATUS FROM `DatabaseName` WHERE `name` LIKE 'TableName' ;
     public static String showInsert(Connection conn, String db, String table, int groupSize) throws SQLException {
         String query = "select * from " + db + "." + table + ";";
         return showInsert(conn, query, groupSize);

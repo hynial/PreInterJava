@@ -19,6 +19,10 @@ public class InsertStatement {
         columnValues.put(column, value);
     }
 
+    public void add2(String column, String value) {
+        columnValues2.put(column, value);
+    }
+
     public String toSql(Map<KeyReference, Object> keys) throws Exception {
         String columns = null;
         String values = null;

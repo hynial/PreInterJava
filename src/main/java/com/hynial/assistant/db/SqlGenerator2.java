@@ -7,6 +7,7 @@ import jdk.dynalink.StandardOperation;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.*;
 import java.util.*;
@@ -23,7 +24,7 @@ public class SqlGenerator2 {
 
     static void insertIntoDatabaseHelper(Connection conn,
                                          Map<String, Map<String, String>> columnValueMapByTable,
-                                         Map<TableColumn, String> given) {
+                                         Map<TableColumn, String> given, Map<String, List<String>> tableAutoFields) {
         Vector<InsertStatement> insertStatements = new Vector<InsertStatement>();
 
         // Output
@@ -118,7 +119,7 @@ public class SqlGenerator2 {
                                         newMap.put(table, map);
                                     }
                                 }
-                                insertIntoDatabaseHelper(conn, newMap, given);
+                                insertIntoDatabaseHelper(conn, newMap, given, tableAutoFields);
                                 return;
                             }
 
@@ -160,7 +161,7 @@ public class SqlGenerator2 {
                     }
                 }
                 newMap.putAll(columnValueMapByTable);
-                insertIntoDatabaseHelper(conn, newMap, given);
+                insertIntoDatabaseHelper(conn, newMap, given, tableAutoFields);
                 return;
             }
 
@@ -183,6 +184,7 @@ public class SqlGenerator2 {
 
         // Execute inserts
         Map<String, String> tableColumnValueMap = new HashMap<String, String>();
+
         for (InsertStatement is : insertStatements) {
             try {
                 Statement s = conn.createStatement();
@@ -199,11 +201,21 @@ public class SqlGenerator2 {
                     System.exit(1);
                 }
                 tableColumnValueMap.put(is.table + "." + is.table + "_id", rs.getString("GENERATED_KEY"));
+                if (!tableAutoFields.containsKey(is.table)) {
+                    tableAutoFields.putAll(RawTool.getAutoFieldMap(conn, conn.getCatalog(), is.table));
+                }
+                is.add2(tableAutoFields.get(is.table).get(0), rs.getString("GENERATED_KEY"));
                 rs.close();
                 s.close();
             } catch (SQLException sqle) {
                 sqle.printStackTrace();
                 System.exit(1);
+            }
+
+            try {
+                Files.writeString(Paths.get("./g_with_id.sql"), is.toString(null) + ";\n", StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -212,7 +224,7 @@ public class SqlGenerator2 {
     // given - TableColumn, value which are known (like user_id)
     public static void insertIntoDatabase(Connection conn,
                                           Map<TableColumn, String> map,
-                                          Map<TableColumn, String> given) {
+                                          Map<TableColumn, String> given, Map<String, List<String>> tableAutoFields ) {
         Map<String, Map<String, String>> columnValueMapByTable = new HashMap<String, Map<String, String>>();
 
         // Find all columns that are in a single table
@@ -231,7 +243,7 @@ public class SqlGenerator2 {
         }
 
         // Helper
-        insertIntoDatabaseHelper(conn, columnValueMapByTable, given);
+        insertIntoDatabaseHelper(conn, columnValueMapByTable, given, tableAutoFields);
     }
 
     public static void main(String[] args) {
@@ -271,6 +283,7 @@ public class SqlGenerator2 {
             conn = DriverManager.getConnection(url, userName, password);
             conn.setAutoCommit(false);
 
+            Map<String, List<String>> tableAutoFields = new HashMap<>();
             for(int i = 0; i < 1000; i++) {
                 // Test data
                 Map<TableColumn, String> map = new HashMap<TableColumn, String>();
@@ -283,7 +296,7 @@ public class SqlGenerator2 {
 //            Map<TableColumn, String> given = new HashMap<TableColumn, String>();
 //            given.put(new TableColumn("ncc_currency", "nxc_code"), "1");
 
-                insertIntoDatabase(conn, map, null);
+                insertIntoDatabase(conn, map, null, tableAutoFields);
             }
         } catch (Exception e) {
             e.printStackTrace();
