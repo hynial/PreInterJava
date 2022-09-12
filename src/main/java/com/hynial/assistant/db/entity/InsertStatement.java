@@ -58,7 +58,7 @@ public class InsertStatement {
             String column = columnValue.getKey();
             String value = columnValue.getValue();
 
-            if (value.startsWith("!@#$%")) {
+            if (value.startsWith("!@#$%") && tableColumnValueMap != null) {
                 String key = value.substring("!@#$%".length());
                 value = tableColumnValueMap.get(key);
                 if (value == null) {

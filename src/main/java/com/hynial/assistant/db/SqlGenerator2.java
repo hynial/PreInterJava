@@ -2,9 +2,15 @@ package com.hynial.assistant.db;
 
 import com.hynial.assistant.db.entity.InsertStatement;
 import com.hynial.assistant.db.entity.TableColumn;
+import jdk.dynalink.StandardOperation;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SqlGenerator2 {
 
@@ -162,6 +168,19 @@ public class SqlGenerator2 {
             insertedTables.add(is.table);
         }
 
+        if (true) {
+            // save to file - sql
+            String sqlStatements = insertStatements.stream().map(is -> is.toString(null)).collect(Collectors.joining(";\n"));
+            try {
+                if (!sqlStatements.endsWith(";\n") || !sqlStatements.endsWith(";")) {
+                    sqlStatements += ";\n";
+                }
+                Files.writeString(new File("./g.sql").toPath(), sqlStatements, StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         // Execute inserts
         Map<String, String> tableColumnValueMap = new HashMap<String, String>();
         for (InsertStatement is : insertStatements) {
@@ -252,16 +271,20 @@ public class SqlGenerator2 {
             conn = DriverManager.getConnection(url, userName, password);
             conn.setAutoCommit(false);
 
-            // Test data
-            Map<TableColumn, String> map = new HashMap<TableColumn, String>();
-            map.put(new TableColumn("ncc_currency", "code"), "1234");
-            map.put(new TableColumn("ncc_currency", "name"), "Bob");
+            for(int i = 0; i < 1000; i++) {
+                // Test data
+                Map<TableColumn, String> map = new HashMap<TableColumn, String>();
+                map.put(new TableColumn("ncc_currency", "code"), RawTool.randomString(5));
+                map.put(new TableColumn("ncc_currency", "name"), RawTool.randomString(5));
+                map.put(new TableColumn("ncc_currency", "nxc_code"), RawTool.randomString(5));
+                map.put(new TableColumn("ncc_currency", "currency_sign"), RawTool.randomString(5));
 
-            // Given columns
+                // Given columns
 //            Map<TableColumn, String> given = new HashMap<TableColumn, String>();
 //            given.put(new TableColumn("ncc_currency", "nxc_code"), "1");
 
-            insertIntoDatabase(conn, map, null);
+                insertIntoDatabase(conn, map, null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

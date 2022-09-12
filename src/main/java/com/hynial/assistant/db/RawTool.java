@@ -125,7 +125,7 @@ public class RawTool {
         return html;
     }
 
-    public static String random_string(int top) {
+    public static String randomString(int top) {
         Random ran = new Random();
         String dat = "";
 
@@ -139,7 +139,7 @@ public class RawTool {
 
     public static String alterQuery(String txt, String table) {
         String rand;
-        for (rand = random_string(8); txt.contains(rand); rand = random_string(8)) {
+        for (rand = randomString(8); txt.contains(rand); rand = randomString(8)) {
         }
 
         txt = txt.replace("\n", rand);
@@ -341,11 +341,16 @@ public class RawTool {
         return count;
     }
 
-    public static String showInsert(Connection conn, String db, String table) throws SQLException {
-        String html = "";
-        html = html + "\r\n--\r\n";
-        html = html + "-- Inserts of " + table + "\r\n";
-        html = html + "--\r\n\r\n";
+    public static String showInsert(Connection conn, String db, String table, int groupSize) throws SQLException {
+        if (groupSize < 1) {
+            groupSize = 10;
+        }
+
+        String desc = "";
+        desc = desc + "\r\n--\r\n";
+        desc = desc + "-- Inserts of " + table + "\r\n";
+        desc = desc + "--\r\n\r\n";
+        String totalSql = desc;
 
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select * from " + db + "." + table + ";");
@@ -353,52 +358,67 @@ public class RawTool {
         int cols = rsmd.getColumnCount();
         String[] c = new String[cols];
         Object[] row = new Object[cols];
-        html = html + "INSERT INTO `" + table + "` (";
+        String insertWrapper = "INSERT INTO `" + table + "` (";
 
         for (int i = 0; i < cols; ++i) {
             c[i] = rsmd.getColumnName(i + 1);
             if (i != 0) {
-                html = html + ",";
+                insertWrapper += ",";
             }
-
-            html = html + "`" + c[i] + "`";
+            insertWrapper += "`" + c[i] + "`";
         }
 
-        html = html + ") VALUES\r\n";
+        insertWrapper += ") VALUES\r\n";
 
-        for (boolean rn = true; rs.next(); html = html + ")") {
-            if (rn) {
-                rn = false;
-            } else {
-                html = html + ",\r\n";
-            }
-
-            html = html + "(";
-
-            for (int i = 0; i < cols; ++i) {
-                try {
-                    row[i] = rs.getString(i + 1);
-                } catch (Exception var10) {
-                    row[i] = "0000-00-00 00:00:00";
+        long currentCursor = 0;
+        boolean endFlag = false;
+        while (true) {
+            for (int groupCursor = 0; groupCursor < groupSize; totalSql += ")") {
+                if(!rs.next()) {
+                    endFlag = true;
+                    break;
                 }
 
-                if (i != 0) {
-                    html = html + ",";
-                }
-
-                if (row[i] == null) {
-                    html = html + row[i];
-                } else if (row[i].toString().matches("[0-9]+")) {
-                    html = html + toSql(row[i].toString());
+                if (groupCursor == 0) {
+                    totalSql += insertWrapper;
                 } else {
-                    html = html + "'" + toSql(row[i].toString()) + "'";
+                    totalSql += ",\r\n";
                 }
+
+                totalSql = totalSql + "(";
+                for (int i = 0; i < cols; ++i) {
+                    try {
+                        row[i] = rs.getString(i + 1);
+                    } catch (Exception var10) {
+                        row[i] = "0000-00-00 00:00:00";
+                    }
+
+                    if (i != 0) {
+                        totalSql += ",";
+                    }
+
+                    if (row[i] == null) {
+                        totalSql += row[i];
+                    } else if (row[i].toString().matches("[0-9]+")) {
+                        totalSql += toSql(row[i].toString());
+                    } else {
+                        totalSql += "'" + toSql(row[i].toString()) + "'";
+                    }
+                }
+
+                groupCursor++;
+                currentCursor++;
+            }
+
+            totalSql += ";\r\n\r\n";
+
+            if(endFlag) {
+                break;
             }
         }
 
-        html = html + ";\r\n\r\n\r\n";
-
-        return html;
+        System.out.println("Total:" + currentCursor);
+        return totalSql;
     }
 
     public static String toSql(String text) {
@@ -436,7 +456,7 @@ public class RawTool {
         conn.setAutoCommit(false);
 
 //        String tableCreate = showTable(conn, "ncc_currency2");
-        String tableInsert = showInsert(conn, "diy", "ncc_currency");
+        String tableInsert = showInsert(conn, "diy", "ncc_currency", 100);
         System.out.println(tableInsert);
     }
 }
