@@ -5,6 +5,8 @@ import com.hynial.assistant.db.entity.TableColumn;
 import com.hynial.assistant.db.entity.TableStatus;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -341,19 +343,26 @@ public class RawTool {
         return count;
     }
 
-    public static String showInsert(Connection conn, String db, String table, int groupSize) throws SQLException {
+    public static String showInsert(Connection conn, String query, int groupSize) throws SQLException {
         if (groupSize < 1) {
             groupSize = 10;
         }
 
+        String table = "";
+        final Pattern pattern = Pattern.compile("\\s+from\\s+([a-zA-Z_0-9\\.]+)\\s?\\;?", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(query);
+        if (matcher.find()) {
+            table = matcher.group(1);
+        }
         String desc = "";
         desc = desc + "\r\n--\r\n";
-        desc = desc + "-- Inserts of " + table + "\r\n";
+        desc = desc + "-- Inserts of " + table + "; @" + LocalDateTime.now() + "\r\n";
+        desc = desc + "-- " + query + "\r\n";
         desc = desc + "--\r\n\r\n";
         String totalSql = desc;
 
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("select * from " + db + "." + table + ";");
+        ResultSet rs = stmt.executeQuery(query);
         ResultSetMetaData rsmd = rs.getMetaData();
         int cols = rsmd.getColumnCount();
         String[] c = new String[cols];
@@ -421,6 +430,11 @@ public class RawTool {
         return totalSql;
     }
 
+    public static String showInsert(Connection conn, String db, String table, int groupSize) throws SQLException {
+        String query = "select * from " + db + "." + table + ";";
+        return showInsert(conn, query, groupSize);
+    }
+
     public static String toSql(String text) {
         text = text.replace("\\", "\\\\");
         text = text.replaceAll("'", "''");
@@ -456,7 +470,9 @@ public class RawTool {
         conn.setAutoCommit(false);
 
 //        String tableCreate = showTable(conn, "ncc_currency2");
-        String tableInsert = showInsert(conn, "diy", "ncc_currency", 100);
+//        String tableInsert = showInsert(conn, "diy", "ncc_currency", 100);
+//        String tableInsert = showInsert(conn, "select * from diy.ncc_currency", 100);
+        String tableInsert = showInsert(conn, "select a.* from diy.ncc_currency a left join ncc_currency2 b on a.code=b.code where 1=1", 100);
         System.out.println(tableInsert);
     }
 }
