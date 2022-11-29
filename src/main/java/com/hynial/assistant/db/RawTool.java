@@ -6,7 +6,6 @@ import com.hynial.assistant.db.entity.TableStatus;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -376,12 +375,15 @@ public class RawTool {
         if (matcher.find()) {
             table = matcher.group(1);
         }
+
         String desc = "";
         desc = desc + "\r\n--\r\n";
         desc = desc + "-- Inserts of " + table + "; @" + LocalDateTime.now() + "\r\n";
         desc = desc + "-- " + query + "\r\n";
         desc = desc + "--\r\n\r\n";
-        String totalSql = desc;
+
+        StringBuilder totalSql = new StringBuilder();
+        totalSql.append(desc);
 
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(query);
@@ -402,21 +404,21 @@ public class RawTool {
         insertWrapper += ") VALUES\r\n";
 
         long currentCursor = 0;
-        boolean endFlag = false;
+        inner:
         while (true) {
-            for (int groupCursor = 0; groupCursor < groupSize; totalSql += ")") {
+            for (int groupCursor = 0; groupCursor < groupSize; totalSql.append(")")) {
                 if(!rs.next()) {
-                    endFlag = true;
-                    break;
+                    totalSql.append(";\r\n");
+                    break inner;
                 }
 
                 if (groupCursor == 0) {
-                    totalSql += insertWrapper;
+                    totalSql.append(insertWrapper);
                 } else {
-                    totalSql += ",\r\n";
+                    totalSql.append(",\r\n");
                 }
 
-                totalSql = totalSql + "(";
+                totalSql.append("(");
                 for (int i = 0; i < cols; ++i) {
                     try {
                         row[i] = rs.getString(i + 1);
@@ -425,15 +427,15 @@ public class RawTool {
                     }
 
                     if (i != 0) {
-                        totalSql += ",";
+                        totalSql.append(",");
                     }
 
                     if (row[i] == null) {
-                        totalSql += row[i];
+                        totalSql.append(row[i]);
                     } else if (row[i].toString().matches("[0-9]+")) {
-                        totalSql += toSql(row[i].toString());
+                        totalSql.append(row[i].toString());
                     } else {
-                        totalSql += "'" + toSql(row[i].toString()) + "'";
+                        totalSql.append("'" + toSql(row[i].toString()) + "'");
                     }
                 }
 
@@ -441,15 +443,10 @@ public class RawTool {
                 currentCursor++;
             }
 
-            totalSql += ";\r\n\r\n";
-
-            if(endFlag) {
-                break;
-            }
+            totalSql.append(";\r\n");
         }
 
-        System.out.println("Total:" + currentCursor);
-        return totalSql;
+        return totalSql.toString();
     }
 
 //    SHOW TABLE STATUS FROM `DatabaseName` WHERE `name` LIKE 'TableName' ;
