@@ -143,6 +143,14 @@ public interface Rand {
     class Pint implements IntSupplier {
         SplittableRandom r = new SplittableRandom(47);
 
+        public Pint() {
+
+        }
+
+        public Pint(long seed) {
+            r = new SplittableRandom(seed);
+        }
+
         @Override
         public int getAsInt() {
             return r.nextInt(MOD);
@@ -154,6 +162,10 @@ public interface Rand {
 
         public int[] array(int sz) {
             return r.ints(sz, 0, MOD).toArray();
+        }
+
+        public int[] array(int sz, int original) {
+            return r.ints(sz, original, MOD).toArray();
         }
     }
 

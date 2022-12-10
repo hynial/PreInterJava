@@ -1,6 +1,7 @@
 package com.hynial.preinter;
 
 import com.hynial.preinter.util.ApplicationUtil;
+import com.hynial.tool.gen.Rand;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -40,5 +41,16 @@ public class SortsTest {
         ApplicationUtil.printArray(testHeap);
         Sorts.HeapSort.sort(testHeap);
         System.out.println(Arrays.toString(testHeap));
+    }
+
+    @Test
+    public void testQuickSort2() {
+        IntStream.range(0, 5).forEach(i -> {
+            int[] arr = new Rand.Pint(i).array(20, -1000);
+            System.out.println(Arrays.toString(arr));
+            sorts.quickSort2(arr, 0, arr.length - 1);
+            System.out.println(Arrays.toString(arr));
+            System.out.println();
+        });
     }
 }

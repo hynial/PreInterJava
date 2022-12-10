@@ -44,6 +44,30 @@ public class Sorts {
         return i;
     }
 
+    public void quickSort2(int[] arr, int l, int r) {
+        if ( l < r) {
+            int i = l + 1, k = i;
+            for (; i <= r && arr[i] <= arr[l]; i++) {
+                k++;
+            }
+
+            for (i++; i <= r; i++) {
+                if (arr[i] < arr[l]) {
+                    int t = arr[i];
+                    arr[i] = arr[k];
+                    arr[k++] = t;
+                }
+            }
+
+            int t = arr[l];
+            arr[l] = arr[k - 1];
+            arr[k - 1] = t;
+
+            quickSort2(arr, l, k - 2);
+            quickSort2(arr, k, r);
+        }
+    }
+
     /**
      * 简单选择排序
      *
