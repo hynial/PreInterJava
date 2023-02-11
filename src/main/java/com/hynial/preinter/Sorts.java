@@ -11,41 +11,35 @@ public class Sorts {
      */
     public void quickSort(int[] arr, int l, int r) {
         if (l < r) {
-            int m = adjustsArr(arr, l, r);
-            quickSort(arr, l, m - 1);
-            quickSort(arr, m + 1, r);
+            int i = l, j = r;
+            int temp = arr[i];
+
+            while (i < j) {
+                while (i < j && arr[j] > temp) {
+                    j--;
+                }
+
+                if (i < j) {
+                    arr[i++] = arr[j];
+                }
+
+                while (i < j && arr[i] < temp) {
+                    i++;
+                }
+
+                if (i < j) {
+                    arr[j--] = arr[i];
+                }
+            }
+
+            arr[i] = temp;
+            quickSort(arr, l, i - 1);
+            quickSort(arr, i + 1, r);
         }
-    }
-
-    private int adjustsArr(int[] arr, int l, int r) {
-        int i = l, j = r;
-        int temp = arr[i];
-
-        while (i < j) {
-            while (i < j && arr[j] > temp) {
-                j--;
-            }
-
-            if (i < j) {
-                arr[i++] = arr[j];
-            }
-
-            while (i < j && arr[i] < temp) {
-                i++;
-            }
-
-            if (i < j) {
-                arr[j--] = arr[i];
-            }
-        }
-
-        arr[i] = temp;
-
-        return i;
     }
 
     public void quickSort2(int[] arr, int l, int r) {
-        if ( l < r) {
+        if (l < r) {
             int i = l + 1, k = i;
             for (; i <= r && arr[i] <= arr[l]; i++) {
                 k++;
@@ -65,6 +59,68 @@ public class Sorts {
 
             quickSort2(arr, l, k - 2);
             quickSort2(arr, k, r);
+        }
+    }
+
+    public void quickSort3(int[] arr, int l, int r) {
+        if (l < r) {
+            int pivot = l++, end = r;
+            while (l < r) {
+                while (l < r && arr[r] >= arr[pivot]) {
+                    r--;
+                }
+
+                while (l < r && arr[l] <= arr[pivot]) {
+                    l++;
+                }
+
+                if (l < r) {
+                    int t = arr[l];
+                    arr[l] = arr[r];
+                    arr[r] = t;
+
+                    // 优化的代价
+                    r--;
+                }
+            }
+
+            if (arr[pivot] > arr[l]) {
+                int t = arr[pivot];
+                arr[pivot] = arr[l];
+                arr[l] = t;
+            } else {
+                l = pivot;
+            }
+
+            quickSort3(arr, pivot, l - 1);
+            quickSort3(arr, l + 1, end);
+        }
+    }
+
+    public void quickSort4(int[] arr, int l, int r) {
+        if (l < r) {
+            int pivot = l, end = r;
+            while (l < r) {
+                while (l < r && arr[r] >= arr[pivot]) {
+                    r--;
+                }
+
+                while (l < r && arr[l] <= arr[pivot]) {
+                    l++;
+                }
+
+                int t = arr[l];
+                if (l < r) {
+                    arr[l] = arr[r];
+                    arr[r] = t;
+                } else {
+                    arr[l] = arr[pivot];
+                    arr[pivot] = t;
+                }
+            }
+
+            quickSort3(arr, pivot, l - 1);
+            quickSort3(arr, l + 1, end);
         }
     }
 
@@ -288,6 +344,7 @@ public class Sorts {
      * 希尔排序(Shell's Sort)是插入排序的一种又称“缩小增量排序”（Diminishing Increment Sort），是直接插入排序算法的一种更高效的改进版本。希尔排序是非稳定排序算法。该方法因D.L.Shell于1959年提出而得名。
      * https://www.cnblogs.com/chengxiao/p/6104371.html
      * 其最坏时间复杂度依然为O(n2)，一些经过优化的增量序列如Hibbard经过复杂证明可使得最坏时间复杂度为O(n3/2)
+     *
      * @param arr
      */
     public void shellSort(int[] arr) {

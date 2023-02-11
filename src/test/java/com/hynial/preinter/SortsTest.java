@@ -44,12 +44,22 @@ public class SortsTest {
     }
 
     @Test
-    public void testQuickSort2() {
+    public void testQuickSortI() {
         IntStream.range(0, 5).forEach(i -> {
             int[] arr = new Rand.Pint(i).array(20, -1000);
+            int[] arr2 = Arrays.copyOf(arr, arr.length);
+//            int[] arr = new int[]{5000, 4086, 2746, 3208, 1122};
             System.out.println(Arrays.toString(arr));
             sorts.quickSort2(arr, 0, arr.length - 1);
-            System.out.println(Arrays.toString(arr));
+            sorts.quickSort3(arr2, 0, arr.length - 1);
+            boolean sorted = Arrays.equals(arr, arr2);
+            if (!sorted) {
+                System.out.println("False");
+                System.out.println(Arrays.toString(arr));
+                System.out.println(Arrays.toString(arr2));
+                throw new RuntimeException("...");
+            }
+            System.out.println(Arrays.toString(arr2));
             System.out.println();
         });
     }
