@@ -94,6 +94,18 @@ public class CountSmaller {
         return result;
     }
 
+    // k为i的二进制中从最低位到高位连续零的长度
+    // 2^k = i&(i^(i-1));
+    // 2^k = i&(-i);
+
+    /*C[1] = A[1];
+    C[2] = A[1] + A[2];
+    C[3] = A[3];
+    C[4] = A[1] + A[2] + A[3] + A[4];
+    C[5] = A[5];
+    C[6] = A[5] + A[6];
+    C[7] = A[7];
+    C[8] = A[1] + A[2] + A[3] + A[4] + A[5] + A[6] + A[7] + A[8];*/
     private int lowbit(int x){
         return x & (-x);
     }

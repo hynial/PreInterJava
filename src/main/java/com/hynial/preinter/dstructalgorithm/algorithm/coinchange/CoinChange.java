@@ -4,12 +4,14 @@ import java.util.Arrays;
 
 public class CoinChange {
     public static void main(String[] args) {
-        int[] coins = {22, 32, 52, 2, 5};
-        int amount = 17;
+//        int[] coins = {22, 32, 52, 2, 5};
+//        int amount = 17;
 //        int[] coins = {2, 3, 5};
 //        int amount = 17;
 //        int[] coins = {19, 3, 5, 12, 13, 21};
 //        int amount = 170;
+        int[] coins = {1, 2, 5};
+        int amount = 5;
         System.out.println(lowestCoins(coins, amount, 0));
         System.out.println(lowestCoins(coins, amount, new int[amount]));
         System.out.println(lowestCoins(coins, amount));
