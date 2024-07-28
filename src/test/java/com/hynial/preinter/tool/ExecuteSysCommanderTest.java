@@ -12,7 +12,9 @@ public class ExecuteSysCommanderTest {
 
         System.out.println(r0);
 
-        ExecuteSysCommander.ExeResult r = ExecuteSysCommander.go("ls -l /", ".");
+        String path = "/";
+        String cmd = "df -i " + path + " | awk 'NR==2 {print $5}'";
+        ExecuteSysCommander.ExeResult r = ExecuteSysCommander.go(cmd, ".");
 
         System.out.println(r);
     }
